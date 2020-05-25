@@ -32,7 +32,9 @@
                 <directory>src/main/java/sample/scenes</directory>
                 <includes>
                     <include>**/*.fxml</include>
+
                 </includes>
+
             </resource>
         </resources>
     </build>

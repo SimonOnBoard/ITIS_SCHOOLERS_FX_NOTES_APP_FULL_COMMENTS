@@ -22,25 +22,31 @@ import java.util.Scanner;
 
 public class Main extends Application {
 
-    public static Controller mainScenecontroller;
+    public static Controller mainSceneController;
     public static List<Integer> lengths = new ArrayList<>();
     public static ObservableList<String> categories = FXCollections.observableArrayList();
 
     @Override
     public void stop(){
         System.out.println("Stage is closing");
-        FileWorker.writeAll(mainScenecontroller.notes, mainScenecontroller.deletedNotes);
+        FileWorker.writeAll(mainSceneController.notes, mainSceneController.deletedNotes);
     }
+    //На вход подаётся главная сцена нашего приложения
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //НАСЛЕДНИК Node - представляет собой список управляющих элементов  заданном fxml файле
         Parent root = null;
         Stage stage = new Stage();
         FXMLLoader loader;
         try {
             loader = new FXMLLoader(getClass().getResource("../sample.fxml"));
+            //вытаскием все управляющие элементы
             root = loader.load();
+            //управляющий класс для данного конкретного fxml
             Controller controller = loader.getController();
+            //подаём коннтроллеру нужные заметки для отображения
             controller.setData(Main.loadNotes());
+            //загружаем сам stage - делает insert новой сцены
             stage.setTitle("Мои заметки");
             stage.setScene(new Scene(root, 900, 700));
             stage.show();
@@ -52,10 +58,14 @@ public class Main extends Application {
     public static List<Note> loadNotes() {
         List<Note> notes = new ArrayList<>();
         File file = new File("data.txt");
+        Scanner scanner = null;
         if(!file.exists()){
-            file = new File("data.txt");
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
-        Scanner scanner;
         try {
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
@@ -86,6 +96,7 @@ public class Main extends Application {
     }
 
     private static String getCurrentText(String text) {
+
         String a = "";
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == '\t') {

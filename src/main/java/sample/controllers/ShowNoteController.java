@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.Main;
 import sample.models.Note;
-import sample.services.FileWorker;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,15 +51,16 @@ public class ShowNoteController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 note.setDeleted(true);
-                Main.mainScenecontroller.listView.getItems().remove(note);
-                Main.mainScenecontroller.notes.remove(note);
-                Main.mainScenecontroller.deletedNotes.add(note);
+                Main.mainSceneController.listView.getItems().remove(note);
+                Main.mainSceneController.notes.remove(note);
+                Main.mainSceneController.deletedNotes.add(note);
                 closeButton.getOnMouseClicked().handle(event);
             }
         });
         editButton.setOnMouseClicked(event -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/scenes/editingPage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../editingPage.fxml"));
+            //что такое vbox гуглим
             VBox content = null;
             try {
                 content = loader.load();
@@ -81,7 +81,7 @@ public class ShowNoteController implements Initializable {
                 this.setData();
                 //Доделать добавление в изначальный лист
                 //Main.mainScenecontroller.listView.getItems().remove(null);
-                Main.mainScenecontroller.listView.getItems().sort(new Comparator<Note>() {
+                Main.mainSceneController.listView.getItems().sort(new Comparator<Note>() {
                     @Override
                     public int compare(Note o1, Note o2) {
                         return o1.getText().length() - o2.getText().length();

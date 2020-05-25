@@ -28,10 +28,13 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML
     public Pane pane;
+
     @FXML
     public Button addButton;
+
     @FXML
     public ListView<Note> listView;
+
     @FXML
     public TextField searchField;
 
@@ -53,19 +56,30 @@ public class Controller implements Initializable {
 
         //ObservableList<Note> noteList = Main.loadNotes();
         //listView.setCellFactory(listView -> new NoteView());
+        //Устанавливаем параметры поиска с помощью специального класса
+        // Этот класс содержит 2 аттрибута - 1 это код (опция поиска) 2 - это название этой опции
         ObservableList<SearchParametr> parametrs = SearchPointInitializer.getSearchParametrs();
         searchPoint.getItems().addAll(parametrs);
+        //устанавливаем соотвествующие значения в choicebox
         searchPoint.setValue(parametrs.get(0));
+        //устанавливаем тип выбора - то есть можно кликнуть в listview по разному
+        //например здесь мы делаем так, чтобы кликался всего один элемента
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        Main.mainScenecontroller = this;
+        //я говорю что этот контроллер и есть контроллер для главного окна и передаю его в main
+        Main.mainSceneController = this;
+        //начинаем описывать реакции на события
+
         addButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                //то же самое что node - элемент нашего интерфейса
                 Parent root = null;
+                //окно
                 Stage stage = new Stage();
                 try {
-                    root = FXMLLoader.load(getClass().getResource("/sample/scenes/newNote.fxml"));
+                    root = FXMLLoader.load(getClass().getResource("../../newNote.fxml"));
                     stage.setTitle("Добавить заметку");
+                    //новая сцена для окна
                     stage.setScene(new Scene(root, 800, 650));
                     stage.show();
                 } catch (IOException e) {
@@ -73,14 +87,15 @@ public class Controller implements Initializable {
                 }
             }
         });
-        searchPoint.getSelectionModel()
-                .selectedItemProperty()
-                .addListener(new ChangeListener<SearchParametr>() {
-                    @Override
-                    public void changed(ObservableValue<? extends SearchParametr> observable, SearchParametr oldValue, SearchParametr newValue) {
-                        getFilteredNotes(searchField.getText(), newValue, useCategoriesFilter.selectedProperty().get());
-                    }
-                });
+        //паттерн проекткирования - listener
+        searchPoint.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SearchParametr>() {
+            @Override
+            public void changed(ObservableValue<? extends SearchParametr> observable, SearchParametr oldValue, SearchParametr newValue) {
+                getFilteredNotes(searchField.getText(), newValue, useCategoriesFilter.selectedProperty().get());
+            }
+        });
+
+
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("")) {
                 setListView(notes);
@@ -91,17 +106,19 @@ public class Controller implements Initializable {
         useCategoriesFilter.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                getFilteredNotes(searchField.getText(), searchPoint.getValue(), newValue);
+                if (useCategoriesFilter.selectedProperty().get()) {
+                    getFilteredNotes(searchField.getText(), searchPoint.getValue(), newValue);
+                }
             }
         });
-        categories.getSelectionModel()
-                .selectedItemProperty()
-                .addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        getFilteredNotes(searchField.getText(), searchPoint.getValue(), useCategoriesFilter.selectedProperty().get());
-                    }
-                });
+        categories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (useCategoriesFilter.selectedProperty().get()) {
+                    getFilteredNotes(searchField.getText(), searchPoint.getValue(), useCategoriesFilter.selectedProperty().get());
+                } ;
+            }
+        });
     }
 
     private void getFilteredNotes(String text, SearchParametr newValue, boolean b) {
@@ -113,7 +130,7 @@ public class Controller implements Initializable {
         listView.setItems(filtered);
     }
 
-    private ObservableList<Note> getCurrentNotes(String text, SearchParametr value, boolean b) {
+    private ObservableList<Note> getCurrentNotes(String text, SearchParametr value, boolean useCategoriesFilter) {
         ObservableList<Note> result = FXCollections.observableArrayList();
         List<Note> preparedResult = new ArrayList<>();
         System.out.println(value.getCode());
@@ -140,7 +157,7 @@ public class Controller implements Initializable {
                 }
                 break;
         }
-        if (b) {
+        if (useCategoriesFilter) {
             String category = categories.getValue();
             for (Note note : preparedResult) {
                 if (note.getCategory().equals(category)) {
@@ -161,7 +178,7 @@ public class Controller implements Initializable {
             Stage stage = new Stage();
             FXMLLoader loader;
             try {
-                loader = new FXMLLoader(getClass().getResource("/sample/scenes/showNote.fxml"));
+                loader = new FXMLLoader(getClass().getResource("../../showNote.fxml"));
                 root = loader.load();
                 ShowNoteController controller = loader.getController();
                 controller.setData(note);
@@ -174,17 +191,19 @@ public class Controller implements Initializable {
         }
     }
 
+    //вызываем чтобы установить текущие данные для контроллера
     public void setData(List<Note> noteList) {
-        for(Note note: noteList){
-            if(note.isDeleted()){
+        for (Note note : noteList) {
+            if (note.isDeleted()) {
                 deletedNotes.add(note);
-            }
-            else{
+            } else {
                 notes.add(note);
             }
         }
         listView.setItems(notes);
-        categories.setItems(Main.categories);
-        categories.setValue(categories.getItems().get(0));
+        if (Main.categories.size() != 0) {
+            categories.setItems(Main.categories);
+            categories.setValue(categories.getItems().get(0));
+        }
     }
 }

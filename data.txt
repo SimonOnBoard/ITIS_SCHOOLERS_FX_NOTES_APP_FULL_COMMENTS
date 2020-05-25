@@ -1,8 +1,0 @@
-1 Name Text Category false
-5 afsfsad Сегоднябылхорошийдень asfasfsaf false
-9 asfasdfas sadfasdfasdfasfd asfasdfasdfasdf false
-2 Text1 Text1 Category1 false
-7 qwrqwrqwerqwerqwe qwerqwerw reqewrqwer true
-8 dfjshfalsfjaa aksfdjhaksjdf	asdfljashflaskfjdasldfaslkjfaslkfjaskldfj	asdlfkjsalfjk	 Category1 true
-3 Name2фафывафыва Text2фывафыафыафываыфваыфвафы Category2фывафыафываыфва true
-6 ыафлода Сегоднябылплохойдень фдылваофыдлралфы true

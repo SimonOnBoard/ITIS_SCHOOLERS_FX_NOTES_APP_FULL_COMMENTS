@@ -19,7 +19,7 @@ public class Note {
     @Override
     public String toString() {
         String text = "";
-        return text + this.name + ": " + this.text + "\n category: " + this.category;
+        return text + "Name: " + this.name + "\n Text: " + this.text + "\n Category: " + this.category;
     }
 
     public void setId(Long id) {

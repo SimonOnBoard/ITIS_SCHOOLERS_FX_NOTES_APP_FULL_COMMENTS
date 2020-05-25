@@ -36,7 +36,7 @@ public class NoteController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println(selector.getValue());
-                String value = (String) selector.getValue();
+                String value = selector.getValue();
                 Note note = null;
                 if (value != null) {
                     note = new Note(name.getText(), text.getText(), selector.getValue(), IdFactory.getNextId());
@@ -45,8 +45,8 @@ public class NoteController implements Initializable {
                     Main.categories.add(category.getText());
                 }
                 FileWorker.write(note);
-                Main.mainScenecontroller.listView.getItems().add(note);
-                Main.mainScenecontroller.notes.add(note);
+                Main.mainSceneController.listView.getItems().add(note);
+                Main.mainSceneController.notes.add(note);
                 Stage stage = (Stage) saveButton.getScene().getWindow();
                 stage.close();
             }
