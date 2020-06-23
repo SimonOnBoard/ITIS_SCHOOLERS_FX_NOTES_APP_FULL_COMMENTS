@@ -1,5 +1,9 @@
 package sample.models;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public class SearchParametr {
     private Integer code;
     private String name;
@@ -7,9 +11,9 @@ public class SearchParametr {
     public SearchParametr(Integer code, String name) {
         this.code = code;
         this.name = name;
+
     }
 
-    @Override
     public String toString() {
         return this.name;
     }

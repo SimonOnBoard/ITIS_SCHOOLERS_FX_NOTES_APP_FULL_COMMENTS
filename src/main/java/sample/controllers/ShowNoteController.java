@@ -75,6 +75,7 @@ public class ShowNoteController implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (!result.isPresent()) {
+                //какие-то  свои действия, если пользователь закрыл окно, не нажав кнопку сохранить
                 throw new IllegalStateException("Пользователь просто закрыл");
             } else if (result.get() == ButtonType.OK) {
                 controller.onClose();
